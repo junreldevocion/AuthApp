@@ -6,7 +6,7 @@ import { EnvelopeIcon } from 'react-native-heroicons/solid';
 import { TailwindProvider } from 'tailwindcss-react-native';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../firebase';
-import { CustomButton, CustomTextInput, KeyboardAvoidWrapper, MainContainer } from '../components';
+import { CustomButton, CustomTextInput, KeyboardAvoidWrapper, MainContainer } from '../components/Index';
 
 const ResetPassword = () => {
   const [email, setEmail] = useState('');

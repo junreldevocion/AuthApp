@@ -5,16 +5,17 @@ import { UserIcon } from 'react-native-heroicons/solid';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { TailwindProvider } from 'tailwindcss-react-native';
-import { DashboardCard, KeyboardAvoidWrapper, MainContainer } from '../components';
+import { DashboardCard, KeyboardAvoidWrapper, MainContainer } from '../components/Index';
 
-export interface TUsers {
+export type TUsers = {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
-}
+};
 
 const Dashboard = ({ route }: any) => {
+  const userParams = JSON.parse(route.params.user);
   const [fullName, setFullName] = useState('');
   const [user, setuser] = useState<TUsers>({
     id: '',
@@ -23,7 +24,6 @@ const Dashboard = ({ route }: any) => {
     email: '',
   });
   useEffect(() => {
-    const userParams = JSON.parse(route.params.user);
     const q = query(collection(db, 'users'), where('email', '==', userParams.email.toLowerCase()));
     const unsub = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc: any) => {

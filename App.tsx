@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { Dashboard, Login, Register, ResetPassword } from './src/screens';
 
-const App: React.FC = () => {
+const App = () => {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<any>();
 

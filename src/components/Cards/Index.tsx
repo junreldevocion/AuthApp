@@ -1,10 +1,11 @@
 import { View, Text } from 'react-native';
 import React, { useState } from 'react';
-import { signOut, updateEmail } from 'firebase/auth';
+import { signOut, updateEmail, updatePassword } from 'firebase/auth';
 import { auth, db } from '../../../firebase';
-import { EnvelopeIcon, UserCircleIcon } from 'react-native-heroicons/solid';
+import { EnvelopeIcon, LockClosedIcon, UserCircleIcon } from 'react-native-heroicons/solid';
 import { doc, updateDoc } from 'firebase/firestore';
-import { CustomButton, CustomTextInput } from '..';
+import CustomTextInput from '../InputText/CustomTextInput';
+import CustomButton from '../Buttons/CustomButton';
 
 interface IProps {
   id: string;
@@ -18,6 +19,7 @@ const DashboardCard: React.FC<IProps> = (user) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLasttName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const logout = async () => {
     try {
@@ -31,13 +33,14 @@ const DashboardCard: React.FC<IProps> = (user) => {
     const updateForm = doc(db, 'users', user.id);
     try {
       await updateEmail(auth.currentUser, email);
+      await updatePassword(auth.currentUser, password);
       await updateDoc(updateForm, {
         firstName,
         lastName,
         email: email.toLowerCase(),
       });
       alert('Succefully update!');
-      logout();
+      setIsUpdate((prev) => !prev);
     } catch (error: any) {
       if (error.code === 'auth/invalid-email') {
         alert('Your email was incorrect');
@@ -51,9 +54,9 @@ const DashboardCard: React.FC<IProps> = (user) => {
 
   const handleUpdateFields = () => {
     if (user) {
-      setFirstName(user.firstName);
-      setLasttName(user.lastName);
-      setEmail(user.email);
+      setFirstName(firstName || user.firstName);
+      setLasttName(lastName || user.lastName);
+      setEmail(email || user.email);
     }
     setIsUpdate((prev) => !prev);
   };
@@ -85,6 +88,14 @@ const DashboardCard: React.FC<IProps> = (user) => {
               label="Email"
               keyboardType={'email-address'}
               placeholder="Enter your email"
+            />
+            <CustomTextInput
+              icon={<LockClosedIcon color={'#1f2937'} width={18} height={18} />}
+              value={password}
+              onChangeText={setPassword}
+              IsSecureText={true}
+              label="Password"
+              placeholder="Enter your passowrd"
             />
             <View className="flex flex-row justify-center items-center">
               <CustomButton

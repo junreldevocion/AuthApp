@@ -5,7 +5,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../../firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { TailwindProvider } from 'tailwindcss-react-native';
-import { CustomButton, CustomTextInput, KeyboardAvoidWrapper, MainContainer } from '../components';
+import { CustomButton, CustomTextInput, KeyboardAvoidWrapper, MainContainer } from '../components/Index';
 
 const Register = ({ navigation }: any) => {
   const [firstName, setFirstName] = useState('');
@@ -16,15 +16,19 @@ const Register = ({ navigation }: any) => {
 
   const createAccount = async () => {
     try {
-      if (password === confirmPassword) {
-        await createUserWithEmailAndPassword(auth, email, password);
-        await addDoc(collection(db, 'users'), {
-          firstName,
-          lastName,
-          email: email.toLowerCase(),
-        });
+      if (firstName !== '' && lastName !== '' && email !== '' && password !== '' && confirmPassword !== '') {
+        if (password === confirmPassword) {
+          await createUserWithEmailAndPassword(auth, email, password);
+          await addDoc(collection(db, 'users'), {
+            firstName,
+            lastName,
+            email: email.toLowerCase(),
+          });
+        } else {
+          alert("Password don't match");
+        }
       } else {
-        alert("Password don't match");
+        alert('empty fields');
       }
     } catch (error: any) {
       if (error.code === 'auth/invalid-email' || error.code === 'auth/wrong-password') {
